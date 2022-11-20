@@ -57,6 +57,13 @@
             android:value="AIzaSyClk35AZZcHJejpo5NyNBmLtCjGUCJzhDg" />
 
         <activity
+            android:name=".ActivityModificar"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityUbicacion"
+            android:exported="false"
+            android:label="@string/title_activity_ubicacion" />
+        <activity
             android:name=".ActivityMapa"
             android:exported="false"
             android:label="@string/title_activity_mapa" />

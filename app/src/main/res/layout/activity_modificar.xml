@@ -7,14 +7,13 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imagen"
+        android:id="@+id/imagen1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="100dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="100dp"
         android:layout_marginBottom="450dp"
-        android:onClick="permisos_camara"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -25,14 +24,14 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
-        android:id="@+id/salvar"
+        android:id="@+id/actualizar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/boton_modifcado"
-        android:enabled="false"
-        android:text="SALVAR CONTACTO"
+        android:enabled="true"
+        android:text="Actializar CONTACTO"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,14 +41,13 @@
         app:layout_constraintVertical_bias="0.875" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/borrar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/boton_modifcado"
-        android:onClick="contactos_salvados"
-        android:text="Contactos Salvados"
+        android:text="Eliminar Contactos "
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,13 +57,13 @@
         app:layout_constraintVertical_bias="0.956" />
 
     <EditText
-        android:id="@+id/numero"
+        android:id="@+id/numero1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
-        android:enabled="false"
+        android:enabled="true"
         android:hint="TELEFONO"
         android:inputType="phone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -77,7 +75,7 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/latitud"
+        android:id="@+id/latitud1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -95,7 +93,7 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/longitud"
+        android:id="@+id/longitud1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -113,13 +111,13 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/nombre"
+        android:id="@+id/nombre1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
-        android:enabled="false"
+        android:enabled="true"
         android:hint="NOMBRE"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -129,19 +127,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.532"
         tools:ignore="TouchTargetSizeCheck" />
-
-    <Button
-        android:id="@+id/button63545"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/boton_modifcado"
-        android:onClick="permisos_gps"
-        android:text="Ubicacion"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.945"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.452" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

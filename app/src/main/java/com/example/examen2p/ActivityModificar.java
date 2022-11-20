@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,102 +29,66 @@ import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-public class MainActivity extends AppCompatActivity{
+public class ActivityModificar extends AppCompatActivity {
     private ImageView imagen;
     private EditText txtnombre,txtnumero,txtlatitud,txtlongitud;
-    private Button salvar;
-    private int validar_dato=1;
+    private String id;
+    private Button actualizar,borrar;
     private static final int REQUESTCODECAMARA=100;
     private static final int REQUESTTAKEFOTO=101;
-    private static final int REQUEST_CODE=1;
     private String currentPhotoPath;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        imagen = (ImageView) findViewById(R.id.imagen);
-        txtnombre = (EditText) findViewById(R.id.nombre);
-        txtnumero = (EditText) findViewById(R.id.numero);
-        txtlatitud = (EditText) findViewById(R.id.latitud);
-        txtlongitud = (EditText) findViewById(R.id.longitud);
-        salvar = (Button) findViewById(R.id.salvar);
-        txtlongitud.setText(getIntent().getStringExtra("cordsx"));
-        txtlatitud.setText(getIntent().getStringExtra("cordsy"));
-        salvar.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_modificar);
+        actualizar=(Button) findViewById(R.id.actualizar);
+        borrar=(Button) findViewById(R.id.borrar);
+        imagen = (ImageView) findViewById(R.id.imagen1);
+        txtnombre = (EditText) findViewById(R.id.nombre1);
+        txtnumero = (EditText) findViewById(R.id.numero1);
+        txtlatitud = (EditText) findViewById(R.id.latitud1);
+        txtlongitud = (EditText) findViewById(R.id.longitud1);
+        byte[] bytes= Base64.getDecoder().decode(getIntent().getStringExtra("foto"));
+        Bitmap bitmap= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        imagen.setImageBitmap(bitmap);
+        txtnombre.setText(getIntent().getStringExtra("nombre"));
+        txtnumero.setText(getIntent().getStringExtra("numero"));
+        txtlatitud.setText(getIntent().getStringExtra("latitud"));
+        txtlongitud.setText(getIntent().getStringExtra("longitud"));
+        id=getIntent().getStringExtra("id");
+        imagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                verificar_campos();
+                permisos_camara3();
+            }
+        });
+        actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actualizar();
+            }
+        });
+        borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eliminar();
             }
         });
     }
-    public boolean verificar(String dato,int numero){
-        String opcion1="[A-Z,Ñ][a-z,ñ]{2,20}";
-        String opcion2="[A-Z,Ñ][a-z,ñ]{2,20}[ ][A-Z,Ñ][a-z,ñ]{2,20}";
-        String opcion3="[A-Z,Ñ][a-z,ñ]{2,20}[ ][A-Z,Ñ][a-z,ñ]{2,20}[ ][A-Z,Ñ][a-z,ñ]{2,20}";
-        String opcion4="[A-Z,Ñ][a-z,ñ]{2,20}[ ][A-Z,Ñ][a-z,ñ]{2,20}[ ][A-Z,Ñ][a-z,ñ]{2,20}[ ][A-Z,Ñ][a-z,ñ]{2,20}";
-        String opcion5="[0-9]{8,10}";
-        String opcion6="[0-9,_,.,-]{4,200}";
-        switch(numero){
-            case 1:{
-                return dato.matches(opcion1+"|"+opcion2+"|"+opcion3+"|"+opcion4);
-            }
-            case 2:{
-                return dato.matches(opcion5);
-            }
-            case 3:{
-                return dato.matches(opcion6);
-            }
-            case 4:{
-                return dato.matches(opcion6);
-            }
-            default:{
-                return false;
-            }
-        }
-    }
-    public void verificar_campos(){
-        if(verificar(txtnombre.getText().toString().trim(),validar_dato)){
-            validar_dato=2;
-            if(verificar(txtnumero.getText().toString().trim(),validar_dato)){
-                validar_dato=3;
-                if(verificar(txtlatitud.getText().toString().trim(),validar_dato)){
-                    validar_dato=4;
-                    if(verificar(txtlongitud.getText().toString().trim(),validar_dato)){
-                        validar_dato=1;
-                        insertar();
-                    }
-                    else{
-                        Toast.makeText(this,"Ubicacion no valido",Toast.LENGTH_SHORT).show();
-                        validar_dato=1;
-                    }
-                }
-                else{
-                    Toast.makeText(this,"Ubicacion no valido",Toast.LENGTH_SHORT).show();
-                    validar_dato=1;
-                }
-            }
-            else{
-                Toast.makeText(this,"Numero no valido",Toast.LENGTH_SHORT).show();
-                validar_dato=1;
-            }
-        }
-        else{
-            Toast.makeText(this,"Nombre no valido",Toast.LENGTH_SHORT).show();
-            validar_dato=1;
-        }
-    }
-    public void insertar(){
-        StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://apk.salasar.xyz/examen2p.php", new Response.Listener<String>(){
+    public void actualizar(){
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://apk.salasar.xyz/examen2p2.php", new Response.Listener<String>(){
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(), "Guardado exitoso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Actualizacion exitoso", Toast.LENGTH_SHORT).show();
                 txtnombre.setText("");
                 txtnumero.setText("");
                 txtnombre.setEnabled(false);
                 txtnumero.setEnabled(false);
-                salvar.setEnabled(false);
                 txtlatitud.setText("");
                 txtlongitud.setText("");
+                Intent lista=new Intent(getApplicationContext(),ActivityLista.class);
+                startActivity(lista);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -133,7 +98,7 @@ public class MainActivity extends AppCompatActivity{
         }){
             protected Map<String,String> getParams() throws AuthFailureError {
                 Map<String,String> parametros=new HashMap<String,String>();
-                parametros.put("id","");
+                parametros.put("id",id);
                 parametros.put("nombre",txtnombre.getText().toString());
                 parametros.put("numero",txtnumero.getText().toString());
                 parametros.put("latitud",txtlatitud.getText().toString());
@@ -145,9 +110,35 @@ public class MainActivity extends AppCompatActivity{
         RequestQueue requestQueue= Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
-    public void contactos_salvados(View view){
-        Intent contactos=new Intent(this,ActivityLista.class);
-        startActivity(contactos);
+    public void eliminar(){
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, "http://apk.salasar.xyz/examen2p3.php", new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getApplicationContext(), "Eliminacion exitoso", Toast.LENGTH_SHORT).show();
+                txtnombre.setText("");
+                txtnumero.setText("");
+                txtnombre.setEnabled(false);
+                txtnumero.setEnabled(false);
+                txtlatitud.setText("");
+                txtlongitud.setText("");
+                Intent lista=new Intent(getApplicationContext(),ActivityLista.class);
+                startActivity(lista);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            protected Map<String,String> getParams() throws AuthFailureError {
+                Map<String,String> parametros=new HashMap<String,String>();
+                parametros.put("id",id);
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue= Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
     public void dispatchTakePictureIntent(){
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -168,12 +159,9 @@ public class MainActivity extends AppCompatActivity{
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] bytes = stream.toByteArray();
             currentPhotoPath = Base64.getEncoder().encodeToString(bytes);
-            salvar.setEnabled(true);
-            txtnombre.setEnabled(true);
-            txtnumero.setEnabled(true);
         }
     }
-    public void permisos_camara(View view) {
+    public void permisos_camara3() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUESTCODECAMARA);
         } else {
@@ -191,27 +179,5 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(),"Permiso Denegado",Toast.LENGTH_LONG).show();
             }
         }
-        else{
-            if(requestCode==REQUEST_CODE&&grantResults.length>0){
-                if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    coordenadas();
-                }
-                else{
-                    Toast.makeText(this,"Permiso denegado", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-    public void permisos_gps(View view){
-        if(ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
-        }
-        else{
-            coordenadas();
-        }
-    }
-    public void coordenadas(){
-        Intent mapa=new Intent(this,ActivityMapa.class);
-        startActivity(mapa);
     }
 }
