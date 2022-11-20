@@ -22,7 +22,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import java.io.ByteArrayOutputStream;
@@ -36,9 +35,8 @@ public class MainActivity extends AppCompatActivity{
     private int validar_dato=1;
     private static final int REQUESTCODECAMARA=100;
     private static final int REQUESTTAKEFOTO=101;
+    private static final int REQUEST_CODE=1;
     private String currentPhotoPath;
-    private RequestQueue request;
-    private JsonObjectRequest jsonObjectRequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +47,8 @@ public class MainActivity extends AppCompatActivity{
         txtlatitud = (EditText) findViewById(R.id.latitud);
         txtlongitud = (EditText) findViewById(R.id.longitud);
         salvar = (Button) findViewById(R.id.salvar);
-        txtlongitud.setText("52.52363");
-        txtlatitud.setText("-96.665520");
-        request= Volley.newRequestQueue(getApplicationContext());
+        txtlongitud.setText(getIntent().getStringExtra("cordsx"));
+        txtlatitud.setText(getIntent().getStringExtra("cordsy"));
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,6 +122,8 @@ public class MainActivity extends AppCompatActivity{
                 txtnombre.setEnabled(false);
                 txtnumero.setEnabled(false);
                 salvar.setEnabled(false);
+                txtlatitud.setText("");
+                txtlongitud.setText("");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -174,11 +173,10 @@ public class MainActivity extends AppCompatActivity{
             txtnumero.setEnabled(true);
         }
     }
-    public void permisos(View view){
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},REQUESTCODECAMARA);
-        }
-        else{
+    public void permisos_camara(View view) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUESTCODECAMARA);
+        } else {
             dispatchTakePictureIntent();
         }
     }
@@ -193,5 +191,27 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(),"Permiso Denegado",Toast.LENGTH_LONG).show();
             }
         }
+        else{
+            if(requestCode==REQUEST_CODE&&grantResults.length>0){
+                if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    coordenadas();
+                }
+                else{
+                    Toast.makeText(this,"Permiso denegado", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+    public void permisos1_gps(View view){
+        if(ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+        }
+        else{
+            coordenadas();
+        }
+    }
+    public void coordenadas(){
+        Intent mapa=new Intent(this,ActivityMapa.class);
+        startActivity(mapa);
     }
 }
