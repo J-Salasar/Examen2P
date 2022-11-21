@@ -61,20 +61,6 @@ public class Adaptador extends BaseAdapter {
                 contexto.startActivity(ubicacion);
             }
         });
-        /*txtnombre.getTag(i);
-        txtnombre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent modificar=new Intent(view.getContext(),ActivityModificar.class);
-                modificar.putExtra("id",id.get(i));
-                modificar.putExtra("nombre",nombre.get(i));
-                modificar.putExtra("numero",numero.get(i));
-                modificar.putExtra("latitud",latitud.get(i));
-                modificar.putExtra("longitud",longitud.get(i));
-                modificar.putExtra("foto",foto.get(i));
-                contexto.startActivity(modificar);
-            }
-        });*/
         return vista;
     }
     @Override

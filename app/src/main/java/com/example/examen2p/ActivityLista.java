@@ -2,6 +2,7 @@ package com.example.examen2p;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -47,6 +48,8 @@ public class ActivityLista extends AppCompatActivity {
     }
     public void agregar(View view){
         Intent principal=new Intent(this,MainActivity.class);
+        principal.putExtra("entrada","0");
+        principal.putExtra("entrada1","0");
         startActivity(principal);
     }
     private void ObtenerLista() {
@@ -70,7 +73,6 @@ public class ActivityLista extends AppCompatActivity {
                         );
                         contactolista.add(persona);
                     }
-                    Toast.makeText(getApplicationContext(), "Recuperado", Toast.LENGTH_LONG).show();
                     fllList();
                 }
                 catch (Throwable error){
@@ -114,5 +116,8 @@ public class ActivityLista extends AppCompatActivity {
             );
         }
         lista.setAdapter(new Adaptador(this,id,nombre,numero,latitud,longitud,foto));
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        return false;
     }
 }

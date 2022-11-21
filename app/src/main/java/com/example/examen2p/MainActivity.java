@@ -9,9 +9,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +38,8 @@ public class MainActivity extends AppCompatActivity{
     private static final int REQUESTCODECAMARA=100;
     private static final int REQUESTTAKEFOTO=101;
     private static final int REQUEST_CODE=1;
-    private String currentPhotoPath;
+    private String currentPhotoPath,entrada,entrada1;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +50,18 @@ public class MainActivity extends AppCompatActivity{
         txtlatitud = (EditText) findViewById(R.id.latitud);
         txtlongitud = (EditText) findViewById(R.id.longitud);
         salvar = (Button) findViewById(R.id.salvar);
-        txtlongitud.setText(getIntent().getStringExtra("cordsx"));
-        txtlatitud.setText(getIntent().getStringExtra("cordsy"));
+        currentPhotoPath = getIntent().getStringExtra("foto");
+        entrada=getIntent().getStringExtra("entrada");
+        entrada1=getIntent().getStringExtra("entrada1");
+        if((entrada.equals("1")) && (entrada1.equals("1"))) {
+            byte[] bytes = Base64.getDecoder().decode(currentPhotoPath);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            imagen.setImageBitmap(bitmap);
+        }
+        txtnombre.setText(getIntent().getStringExtra("nombre"));
+        txtnumero.setText(getIntent().getStringExtra("numero"));
+        txtlatitud.setText(getIntent().getStringExtra("latitud"));
+        txtlongitud.setText(getIntent().getStringExtra("longitud"));
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,8 +102,14 @@ public class MainActivity extends AppCompatActivity{
                 if(verificar(txtlatitud.getText().toString().trim(),validar_dato)){
                     validar_dato=4;
                     if(verificar(txtlongitud.getText().toString().trim(),validar_dato)){
-                        validar_dato=1;
-                        insertar();
+                        if(currentPhotoPath!=null) {
+                            validar_dato = 1;
+                            insertar();
+                        }
+                        else{
+                            Toast.makeText(this,"Foto no tomada",Toast.LENGTH_SHORT).show();
+                            validar_dato = 1;
+                        }
                     }
                     else{
                         Toast.makeText(this,"Ubicacion no valido",Toast.LENGTH_SHORT).show();
@@ -119,9 +138,6 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), "Guardado exitoso", Toast.LENGTH_SHORT).show();
                 txtnombre.setText("");
                 txtnumero.setText("");
-                txtnombre.setEnabled(false);
-                txtnumero.setEnabled(false);
-                salvar.setEnabled(false);
                 txtlatitud.setText("");
                 txtlongitud.setText("");
             }
@@ -133,7 +149,6 @@ public class MainActivity extends AppCompatActivity{
         }){
             protected Map<String,String> getParams() throws AuthFailureError {
                 Map<String,String> parametros=new HashMap<String,String>();
-                parametros.put("id","");
                 parametros.put("nombre",txtnombre.getText().toString());
                 parametros.put("numero",txtnumero.getText().toString());
                 parametros.put("latitud",txtlatitud.getText().toString());
@@ -168,9 +183,7 @@ public class MainActivity extends AppCompatActivity{
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] bytes = stream.toByteArray();
             currentPhotoPath = Base64.getEncoder().encodeToString(bytes);
-            salvar.setEnabled(true);
-            txtnombre.setEnabled(true);
-            txtnumero.setEnabled(true);
+            entrada1="1";
         }
     }
     public void permisos_camara(View view) {
@@ -211,7 +224,16 @@ public class MainActivity extends AppCompatActivity{
         }
     }
     public void coordenadas(){
+        entrada="1";
         Intent mapa=new Intent(this,ActivityMapa.class);
+        mapa.putExtra("nombre",txtnombre.getText().toString());
+        mapa.putExtra("numero",txtnumero.getText().toString());
+        mapa.putExtra("foto",currentPhotoPath);
+        mapa.putExtra("entrada",entrada);
+        mapa.putExtra("entrada1",entrada1);
         startActivity(mapa);
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        return false;
     }
 }

@@ -15,25 +15,25 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.example.examen2p.databinding.ActivityMapaBinding;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.examen2p.databinding.ActivityMapaBinding;
+import com.example.examen2p.databinding.ActivityMapasBinding;
 
-public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback {
+public class ActivityMapas extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityMapaBinding binding;
     private Marker marcador;
     private double lat = 0.0;
     private double lng = 0.0;
-    private String nombre,numero,foto,entrada,entrada1;
+    private String id,nombre,numero,foto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,23 +61,20 @@ public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        id=getIntent().getStringExtra("id");
         nombre=getIntent().getStringExtra("nombre");
         numero=getIntent().getStringExtra("numero");
         foto=getIntent().getStringExtra("foto");
-        entrada=getIntent().getStringExtra("entrada");
-        entrada1=getIntent().getStringExtra("entrada1");
-
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                Intent principal = new Intent(getApplicationContext(), MainActivity.class);
+                Intent principal = new Intent(getApplicationContext(), ActivityModificar.class);
+                principal.putExtra("id",id);
                 principal.putExtra("nombre",nombre);
                 principal.putExtra("numero",numero);
                 principal.putExtra("latitud", String.valueOf(lat));
                 principal.putExtra("longitud", String.valueOf(lng));
                 principal.putExtra("foto",foto);
-                principal.putExtra("entrada",entrada);
-                principal.putExtra("entrada1",entrada1);
                 startActivity(principal);
                 return false;
             }
@@ -117,9 +114,6 @@ public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         actualizarubicacion(location);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,15000,0,locationListener);
-    }
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        return false;
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000,0,locationListener);
     }
 }
