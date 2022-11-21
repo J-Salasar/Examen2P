@@ -212,7 +212,6 @@ public class ActivityModificar extends AppCompatActivity {
         };
         RequestQueue requestQueue= Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-
     }
     public void dispatchTakePictureIntent(){
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

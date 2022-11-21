@@ -67,15 +67,12 @@ public class Adaptador extends BaseAdapter {
     public int getCount() {
         return fotos.size();
     }
-
     @Override
     public Object getItem(int i) {
         return null;
     }
-
     @Override
     public long getItemId(int i) {
         return 0;
     }
-
 }

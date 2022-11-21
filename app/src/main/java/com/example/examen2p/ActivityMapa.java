@@ -1,9 +1,7 @@
 package com.example.examen2p;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -13,42 +11,32 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.examen2p.databinding.ActivityMapaBinding;
-
 public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
     private ActivityMapaBinding binding;
     private Marker marcador;
     private double lat = 0.0;
     private double lng = 0.0;
     private String nombre,numero,foto,entrada,entrada1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMapaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -66,7 +54,6 @@ public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback
         foto=getIntent().getStringExtra("foto");
         entrada=getIntent().getStringExtra("entrada");
         entrada1=getIntent().getStringExtra("entrada1");
-
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
@@ -84,7 +71,6 @@ public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback
         });
         ubicacion();
     }
-
     public void marcador(double lat, double lng) {
         LatLng coordenadas = new LatLng(lat, lng);
         CameraUpdate miubicacion = CameraUpdateFactory.newLatLngZoom(coordenadas,16);
@@ -94,7 +80,6 @@ public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback
         marcador = mMap.addMarker(new MarkerOptions().position(coordenadas).title("Ubicacion actual"));
         mMap.animateCamera(miubicacion);
     }
-
     public void actualizarubicacion(Location location) {
         if (location != null) {
             lat = location.getLatitude();
@@ -102,14 +87,12 @@ public class ActivityMapa extends FragmentActivity implements OnMapReadyCallback
             marcador(lat, lng);
         }
     }
-
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
             actualizarubicacion(location);
         }
     };
-
     public void ubicacion() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

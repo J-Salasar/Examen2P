@@ -1,9 +1,6 @@
 package com.example.examen2p;
-
 import androidx.fragment.app.FragmentActivity;
-
 import android.os.Bundle;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -11,16 +8,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.examen2p.databinding.ActivityUbicacionBinding;
-
 public class ActivityUbicacion extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
     private ActivityUbicacionBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityUbicacionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -29,7 +22,6 @@ public class ActivityUbicacion extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -42,7 +34,6 @@ public class ActivityUbicacion extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(Double.parseDouble(getIntent().getStringExtra("Y")),Double.parseDouble(getIntent().getStringExtra("X")));
         mMap.addMarker(new MarkerOptions().position(sydney).title(getIntent().getStringExtra("etiqueta")));
